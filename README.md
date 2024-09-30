@@ -1,0 +1,2 @@
+# Shopping Mart
+ Shopping Mart is an online shopping platform that allows users to browse and purchase a wide range of products, from groceries to electronics, clothing, and household items. The app leverages modern API development to ensure fast, secure, and reliable shopping experiences. Some of its key features are Product Catalog API, user authentication API,,shopping cart API and other management API
