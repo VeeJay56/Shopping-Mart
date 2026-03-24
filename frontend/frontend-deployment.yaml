@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-mart-frontend
+  labels:
+    app: shopping-mart
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopping-mart
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: shopping-mart
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: shopping-mart-frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-mart-frontend
+spec:
+  selector:
+    app: shopping-mart
+    tier: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer

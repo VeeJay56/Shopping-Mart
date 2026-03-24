@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+*.env
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Docker
+*.tar
+
+# PM2
+.pm2/
+
+# Backups
+*.backup
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/

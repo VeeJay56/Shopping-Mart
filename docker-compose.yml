@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shopping-mart-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/shopping-mart
+      - PORT=5000
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - shopping-mart-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shopping-mart-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - shopping-mart-network
+
+  mongodb:
+    image: mongo:6.0
+    container_name: shopping-mart-db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=SecurePassword123
+      - MONGO_INITDB_DATABASE=shopping-mart
+    volumes:
+      - mongodb-data:/data/db
+    restart: unless-stopped
+    networks:
+      - shopping-mart-network
+
+volumes:
+  mongodb-data:
+
+networks:
+  shopping-mart-network:
+    driver: bridge 

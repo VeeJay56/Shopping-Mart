@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-mart-backend
+  labels:
+    app: shopping-mart
+    tier: backend
+spec:
+  replicas: 3  # High availability
+  selector:
+    matchLabels:
+      app: shopping-mart
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: shopping-mart
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: shopping-mart-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: shopping-mart-secrets
+              key: mongodb-uri
+        - name: PORT
+          value: "5000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-mart-backend
+spec:
+  selector:
+    app: shopping-mart
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
